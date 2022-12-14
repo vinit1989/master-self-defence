@@ -56,6 +56,7 @@ var youtubeVideos = [
   { videoId: 'ZNCDqzTtgdI' }
 ];
 var videoId = youtubeVideos[0];
+var videoNo = 0;
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -67,13 +68,20 @@ app.set('view engine', 'ejs');
 
 app.get('/setVideoId', (req, res) => {
   console.log(req.query.videoId);
-  videoId = youtubeVideos[parseInt(req.query.videoId)];
+  videoNo = parseInt(req.query.videoId);
+  videoId = youtubeVideos[videoNo];
   res.json(videoId);
 });
+
 app.get('/getVideoId', (req, res) => {
   console.log(req.query.videoId);
   res.json(youtubeVideos[parseInt(req.query.videoId)]);
 });
+
+app.get('/videoNo', (req, res) => {
+  res.json({videoNo: videoNo});
+});
+
 app.get('/', (req, res) => {
   res.json(videoId);
 });
