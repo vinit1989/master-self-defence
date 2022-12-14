@@ -70,7 +70,10 @@ app.get('/setVideoId', (req, res) => {
   videoId = youtubeVideos[parseInt(req.query.videoId)];
   res.json(videoId);
 });
-
+app.get('/getVideoId', (req, res) => {
+  console.log(req.query.videoId);
+  res.json(youtubeVideos[parseInt(req.query.videoId)]);
+});
 app.get('/', (req, res) => {
   res.json(videoId);
 });
