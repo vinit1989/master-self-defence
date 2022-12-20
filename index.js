@@ -2,6 +2,27 @@ const express = require('express')
 const path = require('path')
 const PORT = process.env.PORT || 5000
 var app = express();
+
+const ejs = require("ejs");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+  
+mongoose.connect("mongodb+srv://vinitraj:Vn152010.@cluster0.b6hv1.mongodb.net/master-self-defence?retryWrites=true&w=majority", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
+const videoNoSchema = {
+  videoNo: Number
+};
+
+const VideoNo = mongoose.model("VideoNo", videoNoSchema);
+
+app.set("view engine", "ejs");
+  
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 // const path = require('path')
 // app.use('/static', express.static(path.join(__dirname, 'public')))
 var youtubeVideos = [
@@ -69,8 +90,39 @@ app.set('view engine', 'ejs');
 app.get('/setVideoId', (req, res) => {
   console.log(req.query.videoId);
   videoNo = parseInt(req.query.videoId);
-  videoId = youtubeVideos[videoNo];
-  res.json(videoId);
+  // videoId = youtubeVideos[videoNo];
+  const videoIds = new VideoNo({
+    videoNo: videoNo
+  });
+  VideoNo.find({}, function (err, docs) {
+    if (err){
+        console.log(err)
+    }
+    else{
+      if (docs.length !== 0) {
+        VideoNo.updateOne({}, 
+          { videoNo: videoNo }, function (err, docs) {
+          if (err){
+              console.log(err)
+          }
+          else{
+              console.log("Updated Docs : ", docs);
+              videoId = youtubeVideos[videoNo];
+              res.json(videoId);
+          }
+        });
+      } else {
+        videoIds.save(function (err) {
+            if (err) {
+                throw err;
+            } else {
+              videoId = youtubeVideos[videoNo];
+              res.json(videoId);
+            }
+        });
+      }
+    }
+  });
 });
 
 app.get('/getVideoId', (req, res) => {
@@ -80,11 +132,26 @@ app.get('/getVideoId', (req, res) => {
 });
 
 app.get('/videoNo', (req, res) => {
-  res.json({videoNo: videoNo});
+  VideoNo.find({}, function (err, docs) {
+    if (err){
+        console.log(err)
+    }
+    else{
+      res.json(docs[0]);
+    }
+  })
 });
 
 app.get('/', (req, res) => {
-  res.json(videoId);
+  VideoNo.find({}, function (err, docs) {
+    if (err){
+        console.log(err)
+    }
+    else{
+      videoId = youtubeVideos[docs[0].videoNo];
+      res.json(videoId); 
+    }
+  });
 });
 
-app.listen(PORT, () => console.log(`Listening on ${ PORT }`))
+app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
