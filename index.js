@@ -169,7 +169,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/faq', (req, res) => {
-  res.json(faqsList);
+  res.json({ faq: faqsList });
 });
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
