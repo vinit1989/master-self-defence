@@ -76,6 +76,20 @@ var youtubeVideos = [
   { videoId: 'W5O6jFGZS7k' },
   { videoId: 'ZNCDqzTtgdI' }
 ];
+
+var faqsList = [
+  {question: "1", answer: "One"},
+  {question: "2", answer: "Two"},
+  {question: "3", answer: "Three"},
+  {question: "4", answer: "Four"},
+  {question: "5", answer: "Five"},
+  {question: "6", answer: "Six"},
+  {question: "7", answer: "Seven"},
+  {question: "8", answer: "Eight"},
+  {question: "9", answer: "Nine"},
+  {question: "10", answer: "Ten"},
+  {question: "11", answer: "Eleven"}
+];
 var videoId = youtubeVideos[0];
 var videoNo = 0;
 app.use(function(req, res, next) {
@@ -152,6 +166,10 @@ app.get('/', (req, res) => {
       res.json(videoId); 
     }
   });
+});
+
+app.get('/faq', (req, res) => {
+  res.json(faqsList);
 });
 
 app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
